@@ -6,48 +6,8 @@ fpath=(/usr/local/share/zsh-completions $fpath)
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/gce/.oh-my-zsh"
 
-# Set name of the theme to load. Optionally, if you set this to "random"
-# it'll load a random theme each time that oh-my-zsh is loaded.
-# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
+# Load theme. See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 ZSH_THEME="powerlevel9k/powerlevel9k"
-
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion. Case
-# sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
-
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -92,6 +52,8 @@ if ! zplug check --verbose; then
     else
         echo
     fi
+else
+    printf "zplug plugins installed!\n"
 fi
 
 zplug load
@@ -101,28 +63,6 @@ source ~/.zplug/init.zsh
 
 
 # User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# GCE -> I don't use either, so I stick to pstorm or Sublime Text
-#     -> I am leaving these here for those who DO use vim or mvim
-#     -> Uncomment to use
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# GCE -> Not uncommenting this has had no effect on my ability to ssh to remote hosts.
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
 
 export DEFAULT_USER="$USER"
 
@@ -138,15 +78,16 @@ POWERLEVEL9K_MODE='awesome-patched'
     POWERLEVEL9K_RIGHT_SUBSEGMENT_SEPARATOR=''
 
     POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=""
-    POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="%n > "
+    POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX=" %n > "
 
     POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(status dir dir_writable_joined)
     POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(command_execution_time vcs background_jobs_joined time_joined)
+    POWERLEVEL9K_CUSTOM_WIFI_SIGNAL="zsh_wifi_signal"
 
     POWERLEVEL9K_VCS_MODIFIED_BACKGROUND="clear"
     POWERLEVEL9K_VCS_MODIFIED_FOREGROUND="yellow"
     POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND="clear"
-    POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND="yellow"
+    POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND="white"
 
     POWERLEVEL9K_DIR_HOME_BACKGROUND="clear"
     POWERLEVEL9K_DIR_HOME_FOREGROUND="014"
@@ -164,11 +105,13 @@ POWERLEVEL9K_MODE='awesome-patched'
     POWERLEVEL9K_STATUS_ERROR_FOREGROUND="red"
     POWERLEVEL9K_STATUS_VERBOSE=false
     POWERLEVEL9K_TIME_BACKGROUND="clear"
-    POWERLEVEL9K_TIME_FOREGROUND="cyan"
+    POWERLEVEL9K_TIME_FOREGROUND="120"
     POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND='clear'
     POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND='magenta'
     POWERLEVEL9K_BACKGROUND_JOBS_BACKGROUND='clear'
     POWERLEVEL9K_BACKGROUND_JOBS_FOREGROUND='green'
+
+    POWERLEVEL9K_TIME_FORMAT="%D{%H:%M:%S}"
 
     POWERLEVEL9K_HOME_ICON=''
     POWERLEVEL9K_HOME_SUB_ICON=''
@@ -180,6 +123,25 @@ POWERLEVEL9K_MODE='awesome-patched'
 
 # soure oh-my-zsh config
 source $ZSH/oh-my-zsh.sh
+
+zsh_wifi_signal(){
+        local output=$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport -I)
+        local airport=$(echo $output | grep 'AirPort' | awk -F': ' '{print $2}')
+
+        if [ "$airport" = "Off" ]; then
+                local color='%F{yellow}'
+                echo -n "%{$color%}Wifi Off"
+        else
+                local ssid=$(echo $output | grep ' SSID' | awk -F': ' '{print $2}')
+                local speed=$(echo $output | grep 'lastTxRate' | awk -F': ' '{print $2}')
+                local color='%F{yellow}'
+
+                [[ $speed -gt 100 ]] && color='%F{green}'
+                [[ $speed -lt 50 ]] && color='%F{red}'
+
+                echo -n "%{$color%} $ssid $speed Mb/s%{%f%}" # removed char not in my PowerLine font
+        fi
+}
 
 # GCE Aliases.
 # These override those provided by oh-my-zsh libs, plugins, and themes.
@@ -226,9 +188,8 @@ alias apacheLogs="less +F /var/log/apache2/error_log"
 alias apacheRestart='sudo apachectl graceful'
 
 # --- brew: update, outdated, upgrade, cleanup, doctor
-    # bubu is already aliased in the brew plugin (line 57 above)
     # This is my favorite alias.
-alias brdr='bubu && brew doctor'
+alias brdr='brew update && brew outdated && brew upgrade && brew cleanup && brew doctor'
 
 # --- cic: Make tab-completion case-insensitive
     # Another favorite.
