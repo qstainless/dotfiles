@@ -1,13 +1,19 @@
 # GCE's zshrc Modified 2018-11-16
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
+
+echo "Sourcing Z shell... please wait...\n"
 fpath=(/usr/local/share/zsh-completions $fpath)
 
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/gce/.oh-my-zsh"
+export PATH="/usr/local/opt/icu4c/bin:$PATH"
 
+echo -n "Loading theme..."
 # Load theme. See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 ZSH_THEME="powerlevel9k/powerlevel9k"
+sleep 1
+echo "done!"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -18,6 +24,7 @@ plugins=(brew git iterm2 osx composer)
 
 # source $ZSH/oh-my-zsh.sh
 
+echo -n "Checking zplug packages..."
 # zplug
 export ZPLUG_HOME=/usr/local/opt/zplug
 source $ZPLUG_HOME/init.zsh
@@ -53,16 +60,20 @@ if ! zplug check --verbose; then
         echo
     fi
 else
-    printf "zplug plugins installed!\n"
+    sleep 1
+    echo "done!"
 fi
 
+echo -n "Loading plugins (please be patient; this might take a while)..."
 zplug load
 
 # Essential
 source ~/.zplug/init.zsh
 
+echo "done!"
 
 # User configuration
+echo -n "Configuring theme..."
 
 export DEFAULT_USER="$USER"
 
@@ -81,7 +92,7 @@ POWERLEVEL9K_MODE='awesome-patched'
     POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX=" %n > "
 
     POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(status dir dir_writable_joined)
-    POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(command_execution_time vcs background_jobs_joined time_joined)
+    POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(command_execution_time vcs background_jobs_joined time)
     POWERLEVEL9K_CUSTOM_WIFI_SIGNAL="zsh_wifi_signal"
 
     POWERLEVEL9K_VCS_MODIFIED_BACKGROUND="clear"
@@ -111,7 +122,7 @@ POWERLEVEL9K_MODE='awesome-patched'
     POWERLEVEL9K_BACKGROUND_JOBS_BACKGROUND='clear'
     POWERLEVEL9K_BACKGROUND_JOBS_FOREGROUND='green'
 
-    POWERLEVEL9K_TIME_FORMAT="%D{%H:%M:%S}"
+    # POWERLEVEL9K_TIME_FORMAT="%D{%H:%M:%S}"
 
     POWERLEVEL9K_HOME_ICON=''
     POWERLEVEL9K_HOME_SUB_ICON=''
@@ -121,8 +132,16 @@ POWERLEVEL9K_MODE='awesome-patched'
     POWERLEVEL9K_CONTEXT_TEMPLATE="%n@`hostname -f`"
 # END   --> GCE
 
+sleep 1
+echo "done!"
+
+echo -n "Sourcing oh-my-zsh..."
+
 # soure oh-my-zsh config
 source $ZSH/oh-my-zsh.sh
+
+sleep 1
+echo "done!"
 
 zsh_wifi_signal(){
         local output=$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport -I)
@@ -151,6 +170,9 @@ zsh_wifi_signal(){
 # For a full list of active aliases, run `alias`.
 #
 
+echo -n "Calibrating aliases..."
+# ----- Better Terminal
+
 # --- edit: Opens any file in sublime editor
 alias edit='sudo subl'
 
@@ -172,7 +194,7 @@ alias .5='cd ../../../../../'
 # --- Go back 6 directory levels
 alias .6='cd ../../../../../../'
 
-# --- Go back 1 directory level (for fast typers)
+# --- Go back 1 directory level (for fast typists)
 alias cd..='cd ../'
 
 # --- apacheEdit: Edit apache conf files with PHPStorm
@@ -222,6 +244,9 @@ alias editHosts='edit /etc/hosts'
 # --- ep: Edit this profile
 alias ep='pstorm ~/.zshrc'
 
+# --- sp: Source this profile
+alias sp='clr && source ~/.zshrc'
+
 # --- f: Opens current directory in MacOS Finder
 alias f='open -a Finder ./'
 
@@ -245,7 +270,7 @@ alias ipInfo1='ipconfig getpacket en1'
 alias less='less -FSRXc'
 
 # --- Preferred 'ls' implementation
-alias ll='clear; ls -FGlAhp'
+alias l='clear; ls -FGlAhp'
 
 # --- lr: Display current directory tree
 alias lr='ls -R | grep ":$" | sed -e '\''s/:$//'\'' -e '\''s/[^-][^\/]*\//--/g'\'' -e '\''s/^/   /'\'' -e '\''s/-/|/'\'' | less'
@@ -316,9 +341,6 @@ alias ~r='repos'
 # --- showBlocked: All ipfw rules inc/ blocked IPs
 alias showBlocked='sudo ipfw list'
 
-# --- sp: Source this profile
-alias sp='source ~/.zshrc'
-
 # --- topForever: Continual 'top' listing (every 10 seconds)
 alias topForever='top -l 9999999 -s 10 -o cpu'
 
@@ -332,7 +354,7 @@ alias which='which -a'
 alias ~="cd ~"
 
 # --- Always list directory contents upon 'cd'
-cd() { builtin cd "$@"; ll; }
+cd () { builtin cd "$@"; ll; }
 
 # --- ff: Find file under the current directory
 ff () { /usr/bin/find . -name "$@" ; }
@@ -367,8 +389,11 @@ my_ip() { dig +short myip.opendns.com @resolver1.opendns.com }
 # --- ql: Opens any file in MacOS Quicklook Preview
 ql () { qlmanage -p "$*" >& /dev/null; }
 
+# --- rmv: remove files/directories
+rmv () { rm -dfr "$1" }
+
 # --- spotlight: Search for a file using MacOS Spotlight's metadata
-spotlight () { mdfind "kMDItemDisplayName == '$@'wc"; }
+spot () { mdfind "kMDItemDisplayName == '$@'wc"; }
 
 # --- trash: Moves a file to the MacOS trash
 trash () { command mv "$@" ~/.Trash ; }
@@ -427,3 +452,29 @@ ii() {
     #echo -e "\n${RED}DNS Configuration:$NC " ; scutil --dns
     echo
 }
+
+sleep 1
+echo "done!"
+
+echo -n "Configuring paths..."
+
+export PATH="/usr/local/opt/apr/bin:$PATH"
+export PATH="/usr/local/opt/openssl/bin:$PATH"
+export PATH="/usr/local/opt/apr-util/bin:$PATH"
+export PATH="/usr/local/opt/libiconv/bin:$PATH"
+export PATH="/usr/local/opt/libpq/bin:$PATH"
+export PATH="/usr/local/opt/openldap/bin:$PATH"
+export PATH="/usr/local/opt/openldap/sbin:$PATH"
+
+sleep 1
+echo "done!\n"
+
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+sleep 1
+echo "Ready!"
+
+sleep 1
+clr
+
+artii 'Sup, noob!' | lolcat && fortune | cowsay -f vader | lolcat
