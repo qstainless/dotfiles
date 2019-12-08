@@ -1,11 +1,19 @@
 # GCE's zshrc Modified 2019-11-25
-export ZSH="/Users/gce/.oh-my-zsh"
-ZSH_THEME="powerlevel10k/powerlevel10k"
+ZSH=$HOME/.oh-my-zsh
 
 fpath=(/usr/local/share/zsh-completions $fpath)
 
-plugins=(zsh-autosuggestions zsh-completions zsh-syntax-highlighting)
+plugins=(
+    zsh-autosuggestions
+    zsh-completions
+    zsh-syntax-highlighting
+)
+
 autoload -U compinit && compinit
+
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
+COMPLETION_WAITING_DOTS="true"
 
 # Mode must be set before sourcing oh-my-zsh
 POWERLEVEL9K_MODE='awesome-patched'
@@ -76,4 +84,4 @@ bindkey  "^[^[[D" backward-word
 bindkey  "^[^[[C" forward-word
 
 # ----- GCE Aliases.
-source $ZSH/custom/aliases.zsh
+source $ZSH_CUSTOM/aliases.zsh
