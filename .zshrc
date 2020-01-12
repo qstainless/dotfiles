@@ -85,3 +85,5 @@ bindkey  "^[^[[C" forward-word
 
 # ----- GCE Aliases.
 source $ZSH_CUSTOM/aliases.zsh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
