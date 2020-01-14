@@ -1,4 +1,4 @@
-# GCE's zshrc Modified 2019-11-25
+# GCE's zshrc
 ZSH=$HOME/.oh-my-zsh
 
 fpath=(/usr/local/share/zsh-completions $fpath)
@@ -82,8 +82,3 @@ bindkey  "^[[H"   beginning-of-line
 bindkey  "^[[F"   end-of-line
 bindkey  "^[^[[D" backward-word
 bindkey  "^[^[[C" forward-word
-
-# ----- GCE Aliases.
-source $ZSH_CUSTOM/aliases.zsh
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
