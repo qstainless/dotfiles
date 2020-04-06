@@ -1,6 +1,11 @@
 # GCE's zshrc
 ZSH=$HOME/.oh-my-zsh
 
+# Ubuntu Dropbox folder
+DBF=$HOME/Dropbox
+# Mac Dropbox folder
+[ -d "$HOME/Dropbox (Personal)" ] && DBF="$HOME/Dropbox (Personal)"
+
 fpath=(/usr/local/share/zsh-completions $fpath)
 
 plugins=(
@@ -82,3 +87,5 @@ bindkey  "^[[H"   beginning-of-line
 bindkey  "^[[F"   end-of-line
 bindkey  "^[^[[D" backward-word
 bindkey  "^[^[[C" forward-word
+
+export PATH="$PATH:/opt/mssql-tools/bin"
